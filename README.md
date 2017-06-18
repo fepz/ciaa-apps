@@ -1,2 +1,2 @@
-# ciaa-apps
-Example programs using the EDU-CIAA-NXP board.
+# EDU-CIAA-NXP examples
+Example programs for the EDU-CIAA-NXP board using LPCOpen, FreeRTOS, etc

@@ -1,8 +1,6 @@
 # FreeRTOS library Makefile
 
 GCC_BIN ?= $(GCC_BIN_PATH)
-FREERTOS_KERNEL_VERSION_NUMBER ?= v9.0.0
-
 PROJECT = libfreertos
 
 OBJECTS += ./$(FREERTOS_KERNEL_VERSION_NUMBER)/tasks.o

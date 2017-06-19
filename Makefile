@@ -1,13 +1,15 @@
+#
+# Modify example to build in Makefile.mine. 
+#
+-include Makefile.mine
+
 APP_DIR = ./apps
-APP_NAME = freertos_blinky
 
 APP = $(APP_DIR)/$(APP_NAME)
 
 BUILD_DIR = ./build
 
 TARGET=$(BUILD_DIR)/$(APP_NAME).elf
-
-FREERTOS_KERNEL_VERSION_NUMBER=v9.0.0
 
 MAKE_FLAGS += --no-print-directory
 
@@ -60,7 +62,7 @@ LIBRARY_PATHS += -L$(LPC_DIR)
 LIBRARIES += -lfreertos
 LIBRARIES += -llpc
 
-export CFLAGS MODULES
+export CFLAGS MODULES FREERTOS_KERNEL_VERSION_NUMBER
 
 all: $(TARGET)
 

@@ -29,6 +29,9 @@ INCLUDES += $(foreach i, $(wildcard $(APP)/inc), -I$(i))
 
 INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
 INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
+
+INCLUDE_PATHS += -I./libs/sapi_bm/inc
+
 INCLUDES += $(INCLUDE_PATHS)
 
 _DEFINES=$(foreach m, $(DEFINES), -D$(m))
@@ -55,12 +58,15 @@ LDFLAGS += -nostartfiles
 LDFLAGS += -Wl,-gc-sections
 LDFLAGS += $(foreach l, $(LIBS), -l$(l))
 
+SAPI_DIR = ./libs/sapi_bm
 FREERTOS_DIR = ./FreeRTOS
 LPC_DIR = ./lpc
 LIBRARY_PATHS += -L$(FREERTOS_DIR)
 LIBRARY_PATHS += -L$(LPC_DIR)
+LIBRARY_PATHS += -L$(SAPI_DIR)
 LIBRARIES += -lfreertos
 LIBRARIES += -llpc
+LIBRARIES += -lsapi
 
 export CFLAGS MODULES FREERTOS_KERNEL_VERSION_NUMBER
 
@@ -103,6 +109,7 @@ endif
 
 $(TARGET): $(OBJECTS)
 	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sapi_bm/ -f Makefile.mk
 	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk APP_DIR=$(APP)
 	@echo "LD $@"
 	$(Q)$(LD) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBRARIES) $(LIBRARY_PATHS)
@@ -135,6 +142,7 @@ erase:
 
 clean:
 	@echo "Cleaning..."
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sapi_bm/ -f Makefile.mk clean
 	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk clean
 	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk clean
 	$(Q)rm -fR $(OBJECTS) $(TARGET) $(DEPS) $(BUILD_DIR)/$(APP_NAME).lst $(BUILD_DIR)/$(APP_NAME).bin

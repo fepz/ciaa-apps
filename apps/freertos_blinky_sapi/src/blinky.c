@@ -67,6 +67,9 @@ static void prvSetupHardware(void)
 	gpioConfig( LED1, GPIO_OUTPUT );
 	gpioConfig( LED2, GPIO_OUTPUT );
 	gpioConfig( LED3, GPIO_OUTPUT );
+
+   /* Inicializar UART_USB a 115200 baudios */
+   uartConfig( UART_USB, 115200 );
 }
 
 /* LED1 toggle thread */
@@ -78,7 +81,7 @@ static void vLEDTask1(void *pvParameters) {
 		gpioWrite( LED3,  LedState);
         LedState = (bool_t) !LedState;
 
-		vTaskDelay(500);
+        vTaskDelay(500);
 	}
 }
 
@@ -90,6 +93,8 @@ static void vLEDTask2(void *pvParameters) {
 		gpioWrite( LED2,  LedState);
 		gpioWrite( LEDB,  LedState);
         LedState = (bool_t) !LedState;
+
+        uartWriteString( UART_USB, "Hola :)\r\n" );
 
 		vTaskDelay(1000);
 	}

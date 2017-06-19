@@ -29,7 +29,7 @@
  * this code.
  */
 
-#include "../../freertos_blinky/inc/FreeRTOSCommonHooks.h"
+#include "FreeRTOSCommonHooks.h"
 
 #include "FreeRTOS.h"
 #include "task.h"

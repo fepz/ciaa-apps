@@ -1,7 +1,6 @@
 /*
  * @brief Classic Rate Monotonic example with three tasks.
  */
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "sapi.h"         /* <= sAPI header */
@@ -9,7 +8,7 @@
 /* The linker does not include this code in liblpc.a because nothing in it
  * references it... */
 #define CRP_NO_CRP          0xFFFFFFFF
-__attribute__ ((used,section(".crp"))) const unsigned int CRP_WORD = CRP_NO_CRP ;
+__attribute__ ((used,section(".crp"))) const unsigned int CRP_WORD = CRP_NO_CRP;
 
 /*****************************************************************************
  * Private types/enumerations/variables
@@ -108,7 +107,7 @@ int main(void)
 			NULL, (tskIDLE_PRIORITY + 2UL), (TaskHandle_t *) NULL);
 
 	xTaskCreate(vTask3, "vTask3", configMINIMAL_STACK_SIZE,
-	            NULL, (tskIDLE_PRIORITY + 1UL), (TaskHandle_t *) NULL);
+	        NULL, (tskIDLE_PRIORITY + 1UL), (TaskHandle_t *) NULL);
 
 	/* Start the scheduler */
 	vTaskStartScheduler();

@@ -11,13 +11,13 @@ OBJECTS += ./$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F/port.o
 
 INCLUDE_PATHS += -I./$(FREERTOS_KERNEL_VERSION_NUMBER)/include
 INCLUDE_PATHS += -I./$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
-INCLUDE_PATHS += -I../$(APP_DIR)/inc
+INCLUDE_PATHS += -I../../$(APP_DIR)/inc
 
 ############################################################################### 
 AR = $(GCC_BIN)arm-none-eabi-ar
 CC = $(GCC_BIN)arm-none-eabi-gcc
 
-INCLUDE_PATHS += $(foreach m, $(MODULES), -I../$(m)/inc)
+INCLUDE_PATHS += $(foreach m, $(MODULES), -I../../$(m)/inc)
 INCLUDE_PATHS += -I../lpc_chip_43xx/inc/usbd/
 
 CC_FLAGS += $(CFLAGS)

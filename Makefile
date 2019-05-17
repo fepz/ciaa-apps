@@ -13,8 +13,8 @@ TARGET=$(BUILD_DIR)/$(APP_NAME).elf
 
 MAKE_FLAGS += --no-print-directory
 
-MODULES += lpc/lpc_chip_43xx
-MODULES += lpc/lpc_board_ciaa_edu_4337
+MODULES += libs/lpc/lpc_chip_43xx
+MODULES += libs/lpc/lpc_board_ciaa_edu_4337
 
 DEFINES += CORE_M4
 DEFINES += __USE_LPCOPEN
@@ -23,12 +23,12 @@ SRC += $(wildcard $(APP)/*/src/*.c)
 SRC += $(wildcard $(APP)/src/*.c)
 
 INCLUDES += $(foreach m, $(MODULES), -I$(m)/inc)
-INCLUDES += -Ilpc/lpc_chip_43xx/inc/usbd/ 
+INCLUDES += -Ilibs/lpc/lpc_chip_43xx/inc/usbd/ 
 INCLUDES += $(foreach i, $(wildcard $(APP)/*/inc), -I$(i))
 INCLUDES += $(foreach i, $(wildcard $(APP)/inc), -I$(i))
 
-INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
-INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
+INCLUDE_PATHS += -I./libs/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
+INCLUDE_PATHS += -I./libs/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
 INCLUDE_PATHS += -I./libs/sAPI/$(SAPI_VERSION_NUMBER)/inc
 
 INCLUDES += $(INCLUDE_PATHS)
@@ -58,8 +58,8 @@ LDFLAGS += -Wl,-gc-sections
 LDFLAGS += $(foreach l, $(LIBS), -l$(l))
 
 SAPI_DIR = ./libs/sAPI
-FREERTOS_DIR = ./FreeRTOS
-LPC_DIR = ./lpc
+FREERTOS_DIR = ./libs/FreeRTOS
+LPC_DIR = ./libs/lpc
 LIBRARY_PATHS += -L$(FREERTOS_DIR)
 LIBRARY_PATHS += -L$(LPC_DIR)
 LIBRARY_PATHS += -L$(SAPI_DIR)
@@ -67,7 +67,7 @@ LIBRARIES += -lfreertos
 LIBRARIES += -llpc
 LIBRARIES += -lsapi
 
-export CFLAGS MODULES FREERTOS_KERNEL_VERSION_NUMBER
+export CFLAGS MODULES FREERTOS_KERNEL_VERSION_NUMBER SAPI_VERSION_NUMBER
 
 all: $(TARGET)
 
@@ -107,9 +107,9 @@ endif
 	$(Q)$(CC) -MMD $(CFLAGS) -c -o $@ $<
 
 $(TARGET): $(OBJECTS)
-	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk
-	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk SAPI_VERSION_NUMBER=$(SAPI_VERSION_NUMBER)
-	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk APP_DIR=$(APP)
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/lpc/ -f Makefile.mk
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/FreeRTOS/ -f Makefile.mk APP_DIR=$(APP)
 	@echo "LD $@"
 	$(Q)$(LD) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBRARIES) $(LIBRARY_PATHS)
 	$(Q)$(OBJCOPY) -v -O binary $@ $(BUILD_DIR)/$(APP_NAME).bin
@@ -141,7 +141,7 @@ erase:
 
 clean:
 	@echo "Cleaning..."
-	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk clean SAPI_VERSION_NUMBER=$(SAPI_VERSION_NUMBER)
-	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk clean
-	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk clean
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk clean
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/lpc/ -f Makefile.mk clean
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/FreeRTOS/ -f Makefile.mk clean
 	$(Q)rm -fR $(OBJECTS) $(TARGET) $(DEPS) $(BUILD_DIR)/$(APP_NAME).lst $(BUILD_DIR)/$(APP_NAME).bin

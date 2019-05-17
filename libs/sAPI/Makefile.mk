@@ -11,12 +11,12 @@ CC = $(GCC_BIN)arm-none-eabi-gcc
 DEFINES += CORE_M4
 DEFINES += __USE_LPCOPEN
 
-SRC += $(wildcard ./src/*.c)
+SRC += $(wildcard ./$(SAPI_VERSION_NUMBER)/src/*.c)
 
 OBJECTS = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-INCLUDE_PATHS += -I./inc/
+INCLUDE_PATHS += -I./$(SAPI_VERSION_NUMBER)/inc/
 INCLUDE_PATHS += $(foreach m, $(MODULES), -I../../$(m)/inc)
 INCLUDE_PATHS += -I../../lpc_chip_43xx/inc/usbd/
 

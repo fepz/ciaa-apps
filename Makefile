@@ -29,8 +29,7 @@ INCLUDES += $(foreach i, $(wildcard $(APP)/inc), -I$(i))
 
 INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
 INCLUDE_PATHS += -I./FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
-
-INCLUDE_PATHS += -I./libs/sapi_bm/inc
+INCLUDE_PATHS += -I./libs/sAPI/$(SAPI_VERSION_NUMBER)/inc
 
 INCLUDES += $(INCLUDE_PATHS)
 
@@ -39,7 +38,7 @@ _DEFINES=$(foreach m, $(DEFINES), -D$(m))
 OBJECTS = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-LDSCRIPT = ldscript/ciaa_lpc4337.ld
+LDSCRIPT = ldscript/ciaa_lpc4337_2.ld
 
 ARCH_FLAGS += -mcpu=cortex-m4 
 ARCH_FLAGS += -mthumb
@@ -58,7 +57,7 @@ LDFLAGS += -nostartfiles
 LDFLAGS += -Wl,-gc-sections
 LDFLAGS += $(foreach l, $(LIBS), -l$(l))
 
-SAPI_DIR = ./libs/sapi_bm
+SAPI_DIR = ./libs/sAPI
 FREERTOS_DIR = ./FreeRTOS
 LPC_DIR = ./lpc
 LIBRARY_PATHS += -L$(FREERTOS_DIR)
@@ -109,7 +108,7 @@ endif
 
 $(TARGET): $(OBJECTS)
 	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk
-	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sapi_bm/ -f Makefile.mk
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk SAPI_VERSION_NUMBER=$(SAPI_VERSION_NUMBER)
 	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk APP_DIR=$(APP)
 	@echo "LD $@"
 	$(Q)$(LD) -o $@ $(OBJECTS) $(LDFLAGS) $(LIBRARIES) $(LIBRARY_PATHS)
@@ -142,7 +141,7 @@ erase:
 
 clean:
 	@echo "Cleaning..."
-	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sapi_bm/ -f Makefile.mk clean
+	@$(MAKE) $(MAKE_FLAGS) -C ./libs/sAPI/ -f Makefile.mk clean SAPI_VERSION_NUMBER=$(SAPI_VERSION_NUMBER)
 	@$(MAKE) $(MAKE_FLAGS) -C ./lpc/ -f Makefile.mk clean
 	@$(MAKE) $(MAKE_FLAGS) -C ./FreeRTOS/ -f Makefile.mk clean
 	$(Q)rm -fR $(OBJECTS) $(TARGET) $(DEPS) $(BUILD_DIR)/$(APP_NAME).lst $(BUILD_DIR)/$(APP_NAME).bin

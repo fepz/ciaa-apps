@@ -4,10 +4,10 @@
 -include Makefile.mine
 
 APP_DIR = ./apps
+BUILD_DIR = ./build
+LIBS_DIR = ./libs
 
 APP = $(APP_DIR)/$(APP_NAME)
-
-BUILD_DIR = ./build
 
 TARGET=$(BUILD_DIR)/$(APP_NAME).elf
 
@@ -23,13 +23,13 @@ SRC += $(wildcard $(APP)/*/src/*.c)
 SRC += $(wildcard $(APP)/src/*.c)
 
 INCLUDES += $(foreach m, $(MODULES), -I$(m)/inc)
-INCLUDES += -Ilibs/lpc/lpc_chip_43xx/inc/usbd/ 
+INCLUDES += -I$(LIBS_DIR)/lpc/lpc_chip_43xx/inc/usbd/ 
 INCLUDES += $(foreach i, $(wildcard $(APP)/*/inc), -I$(i))
 INCLUDES += $(foreach i, $(wildcard $(APP)/inc), -I$(i))
 
-INCLUDE_PATHS += -I./libs/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
-INCLUDE_PATHS += -I./libs/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
-INCLUDE_PATHS += -I./libs/sAPI/$(SAPI_VERSION_NUMBER)/inc
+INCLUDE_PATHS += -I$(LIBS_DIR)/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/include
+INCLUDE_PATHS += -I$(LIBS_DIR)/FreeRTOS/$(FREERTOS_KERNEL_VERSION_NUMBER)/portable/GCC/ARM_CM4F
+INCLUDE_PATHS += -I$(LIBS_DIR)/sAPI/$(SAPI_VERSION_NUMBER)/inc
 
 INCLUDES += $(INCLUDE_PATHS)
 
@@ -38,7 +38,7 @@ _DEFINES=$(foreach m, $(DEFINES), -D$(m))
 OBJECTS = $(SRC:.c=.o)
 DEPS = $(SRC:.c=.d)
 
-LDSCRIPT = ldscript/ciaa_lpc4337_2.ld
+LDSCRIPT = ldscript/ciaa_lpc4337.ld
 
 ARCH_FLAGS += -mcpu=cortex-m4 
 ARCH_FLAGS += -mthumb
@@ -57,9 +57,9 @@ LDFLAGS += -nostartfiles
 LDFLAGS += -Wl,-gc-sections
 LDFLAGS += $(foreach l, $(LIBS), -l$(l))
 
-SAPI_DIR = ./libs/sAPI
-FREERTOS_DIR = ./libs/FreeRTOS
-LPC_DIR = ./libs/lpc
+SAPI_DIR = $(LIBS_DIR)/sAPI
+FREERTOS_DIR = $(LIBS_DIR)/FreeRTOS
+LPC_DIR = $(LIBS_DIR)/lpc
 LIBRARY_PATHS += -L$(FREERTOS_DIR)
 LIBRARY_PATHS += -L$(LPC_DIR)
 LIBRARY_PATHS += -L$(SAPI_DIR)
